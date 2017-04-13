@@ -54,10 +54,81 @@ void leb_display::display(char d_time[], char d_text1[], char d_text2[]){
     }
 }
 
+void leb_display::displayText(char d_text1[], char d_text2[]){
+    int j =0;
+
+    j =0;
+    while (!sendText(1, d_text1)) {
+        delay(_SEND_DELAY );
+        j++;
+    }
+    if( j >=1) {
+        Serial.print("sendText 1 attempts: ");
+        Serial.println(j);
+    }
+
+    j =0;
+    while (!sendText(2, d_text2)) {
+        delay(_SEND_DELAY );
+        j++;
+    }
+    if( j >=1) {
+        Serial.print("sendText 2 attempts: ");
+        Serial.println(j);
+    }
+}
+
+void leb_display::displayTime(char d_time[]){
+    int j =0;
+    while (!sendTime(d_time)) {
+        delay(_SEND_DELAY );
+        j++;
+    }
+    if( j >=1) {
+        Serial.print("sendTime attempts: ");
+        Serial.println(j);
+    }
+}
+
 void leb_display::clean(){
     cleanTime();
     // cleanSymbol();
     cleanText();
+}
+
+void leb_display::setTime(char d_time[]){
+    _d_time =d_time;
+}
+
+void leb_display::setText(char d_text[]){
+    _d_text =d_text;
+    _text_index =0;
+
+    Serial.print("setText: ");
+    Serial.println(_d_text);
+}
+
+void leb_display::runLoop(int interval){
+    _loop_interval =interval;
+    _timer();
+}
+
+void leb_display::stopLoop(){
+    _timer_t.stop(_timer_job);
+}
+
+void leb_display::update(){
+  _timer_t.update();
+}
+// PRIVATE
+void leb_display::_callbackTimer(void *context){
+  ((leb_display *)context)->_timer();
+}
+
+void leb_display::_timer(){
+    Serial.println("Loop timer");
+    displayText(_d_text, _d_text);
+    _timer_job =_timer_t.after(_loop_interval, _callbackTimer, this);
 }
 
 void leb_display::cleanTime(){

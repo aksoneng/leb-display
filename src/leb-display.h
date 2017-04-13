@@ -3,6 +3,7 @@
 
 #include <SoftwareSerial.h>
 #include <Arduino.h>
+#include "Timer.h"
 
 #define _SEND_DELAY      20
 #define _SERIAL_DELAY    20
@@ -12,7 +13,19 @@ class leb_display{
 public:
 	leb_display(char panel_id, int pin_srx, int pin_stx, int pin_re, int pin_de, int time_len, int symbol_len, int text_len);
 	void display(char d_time[], char d_text1[], char d_text2[]);
+    void displayText(char d_text1[], char d_text2[]);
+    void displayTime(char d_time[]);
 	void clean();
+
+    void setTime(char d_time[]);
+    void setText(char d_text[]);
+    void runLoop(int interval);
+    void stopLoop();
+    void update();
+
+private:
+    static void _callbackTimer(void *context);
+    void _timer();
     void cleanTime();
     void cleanSymbol();
     void cleanText();
@@ -35,6 +48,14 @@ private:
     int _pin_stx;
     int _pin_re;
     int _pin_de;
+
+    char * _d_text ={"abcdefghijklmnopqrstuvwxyz1234567890"};
+    int _text_index;
+    char * _d_time ={"1234"};
+
+    Timer _timer_t;
+    int _timer_job;
+    int _loop_interval;
 };
 
 #endif
