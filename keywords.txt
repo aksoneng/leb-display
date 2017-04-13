@@ -1,0 +1,51 @@
+#######################################
+# Syntax Coloring Map For Motor
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+leb-display	KEYWORD1
+_panel_id   KEYWORD1
+_time_len   KEYWORD1
+_symbol_len KEYWORD1
+_text_len   KEYWORD1
+_pin_srx    KEYWORD1
+_pin_stx    KEYWORD1
+_pin_re     KEYWORD1
+_pin_de     KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+display     KEYWORD2
+clean       KEYWORD2
+
+cleanTime   KEYWORD2
+cleanSymbol KEYWORD2
+cleanText   KEYWORD2
+
+sendDebutPhase2 KEYWORD2
+padRight        KEYWORD2
+
+sendPhase1  KEYWORD2
+sendTime    KEYWORD2
+sendText    KEYWORD2
+sendSymbol  KEYWORD2
+sendFinPhase2   KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+_SEND_DELAY      LITERAL1
+_SERIAL_DELAY    LITERAL1
+_SERIAL_ATTEMPTS LITERAL1
+
+
+private:
+
+};
