@@ -13,12 +13,11 @@ public:
 	leb_display(char panel_id, int pin_srx, int pin_stx, int pin_re, int pin_de, int time_len, int symbol_len, int text_len);
 	void display(char d_time[], char d_text1[], char d_text2[]);
 	void clean();
-
-private:
     void cleanTime();
     void cleanSymbol();
     void cleanText();
 
+private:
     char sendDebutPhase2(char command);
     char *padRight(char *string, int padded_len);
 

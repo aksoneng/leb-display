@@ -60,8 +60,6 @@ void leb_display::clean(){
     cleanText();
 }
 
-
-// PRIVATE
 void leb_display::cleanTime(){
     // Serial.println("Cleaning Time..");
     int j =0;
@@ -114,6 +112,7 @@ void leb_display::cleanText(){
 }
 
 
+// PRIVATE
 char leb_display::sendDebutPhase2(char command) {
 
     char checksum = 0;
