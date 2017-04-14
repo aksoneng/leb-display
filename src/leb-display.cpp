@@ -4,17 +4,21 @@ SoftwareSerial SoftSerial(D5, D6);
 #define SEND(x) SoftSerial.write(x); checksum = checksum ^ x;
 
 // PUBLIC
-leb_display::leb_display(char panel_id, int pin_srx, int pin_stx, int pin_re, int pin_de, int time_len, int symbol_len, int text_len) {
+leb_display::leb_display(char panel_id, int pin_srx, int pin_stx, int pin_re, int pin_de, int time_len, int symbol_len, int text_len, int text_lines) {
 
     _panel_id =panel_id;
     _time_len =time_len;
     _symbol_len =symbol_len;
     _text_len =text_len;
+    _text_lines =text_lines;
 
     _pin_srx =pin_srx;
     _pin_stx =pin_stx;
     _pin_re =pin_re;
     _pin_de =pin_de;
+
+    _d_text = (char*)malloc((_text_lines *_text_len +1) * sizeof(char));
+    _d_time = (char*)malloc((_time_len +1) * sizeof(char));
 
     SoftSerial.begin(9600);
 
@@ -97,15 +101,28 @@ void leb_display::clean(){
 }
 
 void leb_display::setTime(char d_time[]){
-    _d_time =d_time;
+    for(int i =0; i <_time_len; i++) {
+        _d_time[i] =d_time[i];
+    }
+    displayTime(_d_time);
 }
 
 void leb_display::setText(char d_text[]){
-    _d_text =d_text;
+    // _d_text =d_text;
+    Serial.println("setText, d_text: ");
+    Serial.println(d_text);
+    Serial.print("Length: ");
+    Serial.println(strlen(d_text));
+    *_d_text ={0};
+    int i =0;
+    for(i =0; i <strlen(d_text) && i < _text_len *_text_lines; i++) {
+        _d_text[i] =d_text[i];
+    }
     _text_index =0;
-
-    Serial.print("setText: ");
-    Serial.println(_d_text);
+    Serial.print("i: ");
+    Serial.println(i);
+    // Serial.print("setText: ");
+    // Serial.println(_d_text);
 }
 
 void leb_display::runLoop(int interval){
@@ -118,16 +135,31 @@ void leb_display::stopLoop(){
 }
 
 void leb_display::update(){
+    // Serial.println("update");
   _timer_t.update();
 }
+
 // PRIVATE
 void leb_display::_callbackTimer(void *context){
+    // Serial.println("_callbackTimer");
   ((leb_display *)context)->_timer();
 }
 
 void leb_display::_timer(){
-    Serial.println("Loop timer");
-    displayText(_d_text, _d_text);
+    // Serial.println("_timer");
+
+    char text1[_text_len +1];
+    char text2[_text_len +1];
+    for(int i =0; i <_text_len; i++) {
+        text1[i] =_d_text[i +_text_index];
+        text2[i] =_d_text[i +_text_index + _text_len];
+    }
+    _text_index +=_text_len;
+    if(_text_index >strlen(_d_text)){
+        _text_index =0;
+    }
+
+    displayText(text1, text2);
     _timer_job =_timer_t.after(_loop_interval, _callbackTimer, this);
 }
 
