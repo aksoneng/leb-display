@@ -8,8 +8,8 @@
 #include <stdlib.h>
 
 #define _SEND_DELAY      200
-#define _SERIAL_DELAY    20
-#define _SERIAL_ATTEMPTS 50
+#define _SERIAL_DELAY    50
+#define _SERIAL_ATTEMPTS 20
 
 class leb_display{
 public:

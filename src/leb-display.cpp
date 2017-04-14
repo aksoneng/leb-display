@@ -113,10 +113,13 @@ void leb_display::setText(char d_text[]){
     Serial.println(d_text);
     Serial.print("Length: ");
     Serial.println(strlen(d_text));
-    *_d_text ={0};
+    // *_d_text ={0};
     int i =0;
-    for(i =0; i <strlen(d_text) && i < _text_len *_text_lines; i++) {
+    for(i =0; i <strlen(d_text); i++) {
         _d_text[i] =d_text[i];
+    }
+    for(; i <strlen(_d_text); i++) {
+        _d_text[i] ={0};
     }
     _text_index =0;
     Serial.print("i: ");
@@ -155,7 +158,7 @@ void leb_display::_timer(){
         text2[i] =_d_text[i +_text_index + _text_len];
     }
     _text_index +=_text_len;
-    if(_text_index >strlen(_d_text)){
+    if(_text_index +_text_len>strlen(_d_text)){
         _text_index =0;
     }
 
