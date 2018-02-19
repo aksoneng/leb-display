@@ -26,36 +26,46 @@ leb_display::leb_display(char panel_id, int pin_srx, int pin_stx, int pin_re, in
     pinMode(_pin_de, OUTPUT);
 }
 
-void leb_display::display(char d_time[], char d_text1[], char d_text2[]){
+void leb_display::display(char d_time[], char d_symbol[], char d_text1[], char d_text2[]){
     int j =0;
     while (!sendTime(d_time)) {
         delay(_SEND_DELAY );
         j++;
     }
-    if( j >=1) {
+    // if( j >=1) {
         Serial.print("sendTime attempts: ");
         Serial.println(j);
-    }
+    // }
 
     j =0;
     while (!sendText(1, d_text1)) {
         delay(_SEND_DELAY );
         j++;
     }
-    if( j >=1) {
+    // if( j >=1) {
         Serial.print("sendText 1 attempts: ");
         Serial.println(j);
-    }
+    // }
 
     j =0;
     while (!sendText(2, d_text2)) {
         delay(_SEND_DELAY );
         j++;
     }
-    if( j >=1) {
+    // if( j >=1) {
         Serial.print("sendText 2 attempts: ");
         Serial.println(j);
+    // }
+
+    j =0;
+    while (!sendSymbol(d_symbol)) {
+        delay(_SEND_DELAY );
+        j++;
     }
+    // if( j >=1) {
+        Serial.print("sendSymbol attempts: ");
+        Serial.println(j);
+    // }
 }
 
 void leb_display::displayText(char d_text1[], char d_text2[]){
@@ -90,6 +100,18 @@ void leb_display::displayTime(char d_time[]){
     }
     if( j >=1) {
         Serial.print("sendTime attempts: ");
+        Serial.println(j);
+    }
+}
+
+void leb_display::displaySymbol(char d_symbol[]){
+    int j =0;
+    while (!sendSymbol(d_symbol)) {
+        delay(_SEND_DELAY );
+        j++;
+    }
+    if( j >=1) {
+        Serial.print("sendSymbol attempts: ");
         Serial.println(j);
     }
 }
@@ -246,13 +268,16 @@ char *leb_display::padRight(char *string, int padded_len) {
     return string;
 }
 
-
 int leb_display::sendPhase1(int i) {
 
     digitalWrite(_pin_re, HIGH); digitalWrite(_pin_de, HIGH);
+    SoftSerial.flush();
+    while(SoftSerial.available() > 0) {
+      SoftSerial.read();
+    }
+    delay(100);
     SoftSerial.write(0x40 + i);
     SoftSerial.write(0x05);
-    SoftSerial.flush();
     digitalWrite(_pin_re, LOW); digitalWrite(_pin_de, LOW);
 
     int r1 =0;
@@ -383,8 +408,12 @@ int leb_display::sendFinPhase2(char checksum) {
 
     SEND(0x03);
 
-    SoftSerial.write(checksum);
     SoftSerial.flush();
+    while(SoftSerial.available() > 0) {
+      SoftSerial.read();
+    }
+    delay(100);
+    SoftSerial.write(checksum);
     digitalWrite(_pin_re, LOW); digitalWrite(_pin_de, LOW);
 
     int r2 =0;

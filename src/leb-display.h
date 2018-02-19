@@ -8,15 +8,16 @@
 #include <stdlib.h>
 
 #define _SEND_DELAY      200
-#define _SERIAL_DELAY    50
+#define _SERIAL_DELAY    100
 #define _SERIAL_ATTEMPTS 20
 
 class leb_display{
 public:
 	leb_display(char panel_id, int pin_srx, int pin_stx, int pin_re, int pin_de, int time_len, int symbol_len, int text_len, int text_lines);
-	void display(char d_time[], char d_text1[], char d_text2[]);
-    void displayText(char d_text1[], char d_text2[]);
-    void displayTime(char d_time[]);
+	void display(char d_time[], char d_symbol[], char d_text1[], char d_text2[]);
+  void displayText(char d_text1[], char d_text2[]);
+  void displayTime(char d_time[]);
+  void displaySymbol(char d_symbol[]);
 	void clean();
 
     void setTime(char d_time[]);
